@@ -13,7 +13,7 @@ my_public_API = 'UR key'
 my_secret_API = 'UR key'
 
 
-# Copy-Paste API, lol
+# Copy-Paste API from here https://github.com/exmo-dev/exmo_api_lib/tree/master/python , lol
 class ExmoAPI:
     def __init__(self, API_KEY, API_SECRET, API_URL='api.exmo.me', API_VERSION='v1'):
         self.API_URL = API_URL
