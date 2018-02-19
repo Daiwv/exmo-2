@@ -7,7 +7,7 @@ from src import api
 API_key, API_secret = open('keys.txt').read().split('\n')
 # Your API and secret keys from Exmo settings, put it in keys.txt
 
-work_time = 1  # time for work in minutes
+work_time = 10  # time for work in minutes
 candle_len = 10  # time of one candle in seconds
 interval = 0.33  # interval between scanning the prices in seconds
 
@@ -49,7 +49,7 @@ class Candles:
 
         while time.time() - begin_time <= work_time * 60:
             candles.append(make_candle(candles[-1]['close']))
-            print(candles[-1])
+            print('left:', work_time * 60 - (time.time() - begin_time))
         return candles
 
 
