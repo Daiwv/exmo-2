@@ -104,4 +104,4 @@ ENV/
 keys.txt
 
 # PyCharm tmp files
-**.idea/
+**/.idea/
