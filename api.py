@@ -7,12 +7,6 @@ import hmac
 import time
 
 
-# params
-
-my_public_API = 'UR key'
-my_secret_API = 'UR key'
-
-
 # Copy-Paste API from here https://github.com/exmo-dev/exmo_api_lib/tree/master/python , lol
 class ExmoAPI:
     def __init__(self, API_KEY, API_SECRET, API_URL='api.exmo.me', API_VERSION='v1'):
@@ -33,8 +27,8 @@ class ExmoAPI:
         sign = self.sha512(params)
         headers = {
             "Content-type": "application/x-www-form-urlencoded",
-            "Key"         : self.API_KEY, # MAMA TIMOFEYA SHALAVA I VCHERA ONA HOROSHO MNE OTSOSALA
-            "Sign"        : sign # REALNO KLASSNAYA SOSKA
+            "Key"         : self.API_KEY,  # MAMA TIMOFEYA SHALAVA I VCHERA ONA HOROSHO MNE OTSOSALA
+            "Sign"        : sign  # REALNO KLASSNAYA SOSKA
             }
         conn = http.client.HTTPSConnection(self.API_URL)
         conn.request("POST", "/" + self.API_VERSION + "/" + api_method, params, headers)
@@ -51,12 +45,3 @@ class ExmoAPI:
         except json.decoder.JSONDecodeError:
             print('Error while parsing response:', response)
             raise sys.exit()
-
-
-exmo = ExmoAPI(my_public_API, my_secret_API)
-prices = []
-for i in range(100):
-    prices.append(float(exmo.req('ticker')['BTC_USD']['buy_price']))
-    print(prices[-1])
-    time.sleep(0.33)
-print(prices)
