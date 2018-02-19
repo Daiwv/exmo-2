@@ -1,7 +1,6 @@
-import sys
 import time
 import json
-import api
+from src import api
 
 # <params>
 
