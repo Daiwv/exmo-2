@@ -102,3 +102,6 @@ ENV/
 
 # secret keys
 keys.txt
+
+# PyCharm tmp files
+.idea/
