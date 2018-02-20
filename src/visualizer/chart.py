@@ -1,11 +1,28 @@
 import pygame
 import sys
 
+# CONTROLS:
+# LMB (hold):           move around the chart
+# RMB (hold):           display price highlight
+# Mouse wheel (press):  move to the end of the chart
+# Mouse wheel (up):     zoom in (increase candle width)
+# Mouse wheel (down):   zoom out (decrease candle width)
+#
+# Arrow right key:      move right
+# Arrow left key:       move left
+# Arrow up key:         same as Mouse wheel up
+# Arrow down key:       same as Mouse wheel down
+# LShift (hold):        move more with arrow left & arrow right
+# Home key:             reset zoom (set candle width to default value)
+# End key:              same as Mouse wheel press
+# Insert key:           toggle highlight (pressing & releasing RMB will cancel this though)
+
 
 class ChartInputs:
     def __init__(self):
         self.lmb = False
         self.rmb = False
+        self.keys = dict()
         self.mpos = [0, 0]
         self.mdelta = [0, 0]
 
@@ -30,11 +47,26 @@ class ChartInputs:
 
         self.mpos = e.pos
 
+    def KeyDown(self, e: pygame.event.EventType):
+        self.keys[e.key] = True
+
+    def KeyUp(self, e: pygame.event.EventType):
+        self.keys[e.key] = False
+
+    def GetKey(self, key):
+        if key not in self.keys:
+            self.keys[key] = False
+            return False
+
+        return self.keys[key]
+
 
 class ChartSettings:
     def __init__(self):
         self.candleWidth = 7
+        self.default_candleWidth = self.candleWidth
         self.candleGapHalf = 1
+        self.default_candleGapHalf = self.candleGapHalf
         self.candleLookaround = 0.64  # * GetMaxCandlesOnScreen(); highestHigh & lowestLow boundaries from UpdateSurface
         self.highlightHeight = 21
         self.highlightColor = pygame.Color('0x00AAFFFF')
@@ -48,8 +80,6 @@ class ChartSettings:
         self.priceNotchOffset = 0.03
         self.priceTextOffset = 0.06
         self.backgroundColor = pygame.Color('0xFFFFFFFF')
-        self.bullCandleColor = pygame.Color('0x3BC195FF')
-        self.bearCandleColor = pygame.Color('0xF83F5DFF')
 
 
 class ChartBlock:
@@ -73,7 +103,13 @@ class Chart:
         self.sizes = list()
         self.blocks = list()
         # self.count = 0
+        self.drawHighlight = False
+
         self.ss = settings
+        self.borderRight = int(self.width * 0.9)  # leave some % for prices and stuff
+        self.borderLeft = 8
+        self.borderTop = int(self.height * 0.05)
+        self.borderBottom = int(self.height * 0.95)
 
     def GetMaxCandlesOnScreen(self, px: int) -> int:
         return int(px // (self.ss.candleWidth + 2 * self.ss.candleGapHalf))
@@ -316,7 +352,7 @@ class Chart:
                 if candleBlockI < 0:
                     candleBlockI = 0
 
-        if self.inp.rmb:
+        if self.drawHighlight:
             my = self.inp.mpos[1]
             if my in range(borderTop, borderBottom + 1):
                 self.DrawHighlight(my, borderLeft, borderRight,
@@ -347,6 +383,13 @@ class Chart:
             bUpdate = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.inp.MouseButtonDown(event)
+
+                if event.button == 0x3:
+                    self.drawHighlight = True
+                elif event.button == 0x5:
+                    self.ss.candleWidth = max((1, self.ss.candleWidth - 1))
+                elif event.button == 0x4:
+                    self.ss.candleWidth += 1
             elif event.type == pygame.MOUSEBUTTONUP:
                 # 0x1: LMB
                 # 0x2: Wheel click
@@ -361,12 +404,43 @@ class Chart:
                 elif event.button == 0x2:
                     self.offset = 0
                     self.stableOffset = 0
+                elif event.button == 0x3:
+                    self.drawHighlight = False
             elif event.type == pygame.MOUSEMOTION:
                 self.inp.MouseMotion(event)
 
                 if self.inp.lmb:
                     self.offset = self.stableOffset + (self.inp.mdelta[0] //
                                                        (self.ss.candleWidth + 2*self.ss.candleGapHalf))
+            elif event.type == pygame.KEYDOWN:
+                self.inp.KeyDown(event)
+                drawPxX = self.borderRight - self.borderLeft - 1
+
+                if event.key == 0x111:
+                    self.ss.candleWidth += 1
+                elif event.key == 0x112:
+                    self.ss.candleWidth = max((1, self.ss.candleWidth - 1))
+                elif event.key == 0x116:
+                    self.ss.candleWidth = self.ss.default_candleWidth
+                elif event.key == 0x114:
+                    if self.inp.GetKey(0x130):
+                        self.offset += max((self.GetMaxCandlesOnScreen(drawPxX) // 4, 1))
+                    else:
+                        self.offset += 2
+                    self.stableOffset = self.offset
+                elif event.key == 0x113:
+                    if self.inp.GetKey(0x130):
+                        self.offset -= max((self.GetMaxCandlesOnScreen(drawPxX) // 4, 1))
+                    else:
+                        self.offset -= 2
+                    self.stableOffset = self.offset
+                elif event.key == 0x117:
+                    self.offset = 0
+                    self.stableOffset = self.offset
+                elif event.key == 0x115:
+                    self.drawHighlight = not self.drawHighlight
+            elif event.type == pygame.KEYUP:
+                self.inp.KeyUp(event)
             else:
                 bUpdate = False
 
