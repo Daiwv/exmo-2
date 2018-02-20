@@ -232,17 +232,12 @@ class Chart:
     def UpdateSurface(self):
         self.surf.fill(self.ss.backgroundColor)
 
-        borderRight = int(self.width * 0.9)  # leave some % for prices and stuff
-        borderLeft = 8
-        borderTop = int(self.height * 0.05)
-        borderBottom = int(self.height * 0.95)
-
-        drawPxX = borderRight - borderLeft - 1
-        drawPxY = borderBottom - borderTop - 1
+        drawPxX = self.borderRight - self.borderLeft - 1
+        drawPxY = self.borderBottom - self.borderTop - 1
 
         verticalPad = round(drawPxY * 0.04)
-        limitTop = borderTop + verticalPad  # this is where highestHigh is
-        limitBottom = borderBottom - verticalPad  # this is where lowestLow is
+        limitTop = self.borderTop + verticalPad  # this is where highestHigh is
+        limitBottom = self.borderBottom - verticalPad  # this is where lowestLow is
         pricePx = limitBottom - limitTop + 1
 
         maxCandles = self.GetMaxCandlesOnScreen(drawPxX)
@@ -272,12 +267,12 @@ class Chart:
             # getCandles = lastCandle + 1
 
         candleWidthTotal = self.ss.candleWidth + self.ss.candleGapHalf * 2
-        candleX = borderRight - candleWidthTotal  # this is where the rightmost candle is
+        candleX = self.borderRight - candleWidthTotal  # this is where the rightmost candle is
         if self.offset < 0:
             candleX += self.offset * candleWidthTotal
 
-        self.DrawBackgrounds(borderLeft, borderRight, borderTop, borderBottom, lastCandle, candleX)
-        self.DrawGrid(borderLeft, borderRight, borderTop, borderBottom, 16)
+        self.DrawBackgrounds(self.borderLeft, self.borderRight, self.borderTop, self.borderBottom, lastCandle, candleX)
+        self.DrawGrid(self.borderLeft, self.borderRight, self.borderTop, self.borderBottom, 16)
 
         highLowExtension = round(maxCandles * self.ss.candleLookaround)
 
@@ -301,7 +296,7 @@ class Chart:
         deltaPrice = highestHigh - lowestLow
         pricePerPixel = deltaPrice / pricePx
 
-        self.DrawPrices(borderRight, borderTop, borderBottom, 16, limitTop, highestHigh, pricePerPixel)
+        self.DrawPrices(self.borderRight, self.borderTop, self.borderBottom, 16, limitTop, highestHigh, pricePerPixel)
 
         prevBlocksSum = 0
         candleBlockI = 0
@@ -354,8 +349,8 @@ class Chart:
 
         if self.drawHighlight:
             my = self.inp.mpos[1]
-            if my in range(borderTop, borderBottom + 1):
-                self.DrawHighlight(my, borderLeft, borderRight,
+            if my in range(self.borderTop, self.borderBottom + 1):
+                self.DrawHighlight(my, self.borderLeft, self.borderRight,
                                    str(round(self.GetPriceOnPixel(my, limitTop, highestHigh, pricePerPixel), 3)))
 
         pygame.display.flip()
