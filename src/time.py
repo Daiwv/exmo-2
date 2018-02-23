@@ -1,5 +1,6 @@
 import time
 from src import exmo_api
+import os
 
 # <params>
 
@@ -24,3 +25,4 @@ if __name__ == '__main__':
         print(response_time)
         ans.append(response_time)
     print('avg:', sum(ans) / 60)
+    os.system('ping exmo.me')
