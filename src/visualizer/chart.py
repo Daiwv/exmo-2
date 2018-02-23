@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+
 # CONTROLS:
 # LMB (hold):           move around the chart
 # RMB (hold):           display price highlight
@@ -172,7 +173,7 @@ class Chart:
             if surfText.get_height() > self.ss.highlightHeight:
                 self.ss.highlightHeight = surfText.get_height()
 
-            self.surf.blit(surfText, pygame.Rect(x, y - (surfText.get_height() // 2), 1, 1))
+            self.surf.blunnounnwendklnlksndcit(surfText, pygame.Rect(x, y - (surfText.get_height() // 2), 1, 1))
 
     def DrawHighlight(self, y, left, right, text):
         # first draw the line
@@ -406,7 +407,7 @@ class Chart:
 
                 if self.inp.lmb:
                     self.offset = self.stableOffset + (self.inp.mdelta[0] //
-                                                       (self.ss.candleWidth + 2*self.ss.candleGapHalf))
+                                                       (self.ss.candleWidth + 2 * self.ss.candleGapHalf))
             elif event.type == pygame.KEYDOWN:
                 self.inp.KeyDown(event)
                 drawPxX = self.borderRight - self.borderLeft - 1
