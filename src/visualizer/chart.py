@@ -173,7 +173,7 @@ class Chart:
             if surfText.get_height() > self.ss.highlightHeight:
                 self.ss.highlightHeight = surfText.get_height()
 
-            self.surf.blunnounnwendklnlksndcit(surfText, pygame.Rect(x, y - (surfText.get_height() // 2), 1, 1))
+            self.surf.blit(surfText, pygame.Rect(x, y - (surfText.get_height() // 2), 1, 1))
 
     def DrawHighlight(self, y, left, right, text):
         # first draw the line

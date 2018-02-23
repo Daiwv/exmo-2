@@ -1,10 +1,10 @@
 import time
-import json
-from src import exmo_api
+from root import root
+from src.bot import exmo_api
 
 # <params>
 
-API_key, API_secret = open('keys.txt').read().split('\n')
+API_key, API_secret = open(root + '\data\keys.txt').read().split('\n')
 # Your API and secret keys from Exmo settings, put it in keys.txt
 
 work_time = 300  # time for work in minutes
@@ -55,6 +55,10 @@ class Candles:
 
 
 if __name__ == '__main__':
-    candles = Candles(API_key, API_secret).make_candles(work_time, candle_len, interval)
-    with open('candles.json', 'w') as f:
-        print(json.dumps(candles), file=f)
+    # candles = Candles(API_key, API_secret).make_candles(work_time, candle_len, interval)
+    # with open('candles.json', 'w') as f:
+    #     print(json.dumps(candles), file=f)
+    for i in range(60):
+        begin_time = time.time()
+        a = exmo_api.ExmoAPI(API_key, API_secret).req('ticker')['BTC_USD']['sell_price']
+        print((time.time() - begin_time))

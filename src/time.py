@@ -1,5 +1,5 @@
 import time
-from src import exmo_api
+from src.bot import exmo_api
 import os
 
 # <params>
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     ans = []
     for i in range(60):
         begin_time = time.time()
-        exmo.req('ticker')['BTC_USD']['sell_price']
+        a = exmo.req('ticker')['BTC_USD']['sell_price']
         response_time = time.time() - begin_time
         print(response_time)
         ans.append(response_time)

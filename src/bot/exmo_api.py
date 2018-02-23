@@ -27,8 +27,8 @@ class ExmoAPI:
         sign = self.sha512(params)
         headers = {
             "Content-type": "application/x-www-form-urlencoded",
-            "Key"         : self.API_KEY,  # MAMA TIMOFEYA SHALAVA I VCHERA ONA HOROSHO MNE OTSOSALA
-            "Sign"        : sign  # REALNO KLASSNAYA SOSKA
+            "Key"         : self.API_KEY,
+            "Sign"        : sign
             }
         conn = http.client.HTTPSConnection(self.API_URL)
         conn.request("POST", "/" + self.API_VERSION + "/" + api_method, params, headers)
