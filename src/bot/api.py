@@ -40,8 +40,6 @@ class ExmoAPI:
             obj = json.loads(response.decode('utf-8'))
             if 'error' in obj and obj['error']:
                 print(obj['error'])
-                raise sys.exit()
             return obj
         except json.decoder.JSONDecodeError:
             print('Error while parsing response:', response)
-            raise sys.exit()
